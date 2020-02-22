@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.sys.FoodSysDao">
+
+    <resultMap id="food" type="com.demo.entity.FoodEntity">
+        <id property="id" column="id"/>
+        <result column="food_name" property="foodName"/>
+        <result column="foodType_id" property="foodTypeId"/>
+        <result column="price" property="price"/>
+        <result column="discount" property="discount"/>
+        <result column="remark" property="remark"/>
+        <result column="img" property="img"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="disabled" property="disabled"/>
+
+        <association property="foodType" resultMap="foodType"/>
+    </resultMap>
+
+    <resultMap id="foodType" type="com.demo.entity.FoodTypeEntity">
+        <id column="id" property="id"/>
+        <result column="type_name" property="typeName"/>
+    </resultMap>
+
+    <!--//根据菜系ID查询 3未删除的菜品 模糊 -->
+    <select id="find" resultMap="food">
+        SELECT food.*, foodType.type_name
+        FROM tb_food food
+        LEFT JOIN tb_food_type foodType ON food.foodType_id = foodType.id
+        where 1 = 1
+        <if test="param2 !=null">and foodType_id = #{param2}</if>
+        <if test="param1 !=null">and food_name like "%"#{param1}"%"</if>
+        order by id
+    </select>
+
+    <!--查询表 tb_food-->
+    <select id="findById" resultType="com.demo.entity.FoodEntity">
+        select *
+        from tb_food
+        where id = #{foodId}
+    </select>
+
+    <!-- 修改-->
+    <update id="update">
+        UPDATE tb_food
+        SET food_name   = #{foodName},
+            foodType_id = #{foodTypeId},
+            price       = #{price},
+            discount    = #{discount},
+            remark      = #{remark},
+            img         = #{img},
+            update_date = NOW(),
+            disabled    = #{disabled}
+        WHERE id = #{id}
+    </update>
+
+    <!--通过 菜名 查找-->
+    <select id="findByFoodName" resultType="com.demo.entity.FoodEntity">
+        SELECT *
+        FROM tb_food
+        where food_name = #{foodName}
+    </select>
+
+    <!-- 添加-->
+    <insert id="insert">
+        INSERT INTO tb_food(food_name, foodType_id, price, discount, remark, img, create_date)
+        VALUES (#{foodName}, #{foodTypeId}, #{price}, #{discount}, #{remark}, #{img}, NOW());
+    </insert>
+</mapper>

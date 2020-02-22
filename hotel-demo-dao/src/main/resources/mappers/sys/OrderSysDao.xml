@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.sys.OrderSysDao">
+
+    <select id="find" resultType="com.demo.entity.OrderEntity">
+        SELECT *
+        FROM tb_order torder
+                 LEFT JOIN tb_dinner_table dtable ON torder.table_id = dtable.id
+        order by torder.id
+    </select>
+
+    <select id="findById" resultType="com.demo.entity.OrderEntity">
+        SELECT *
+        FROM tb_order torder
+                 LEFT JOIN tb_dinner_table dtable ON torder.table_id = dtable.id
+        where torder.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE tb_order
+        SET order_code = #{orderCode},
+            table_id = #{tableId},
+            total_Price = #{totalPrice},
+            order_Status = #{orderStatus},
+            order_Date = #{orderDate},
+            pay_date = #{payDate},
+            disabled = #{disabled}
+        WHERE id = #{id}
+    </update>
+</mapper>

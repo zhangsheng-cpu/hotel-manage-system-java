@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.app.FoodTypeDao">
+
+    <!--查询表 tb_food-->
+    <select id="findAll" resultType="com.demo.entity.FoodTypeEntity">
+        select * from tb_food_type where disabled = 0
+    </select>
+</mapper>

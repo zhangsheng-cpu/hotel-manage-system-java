@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.app.OrderDao">
+
+    <resultMap id="orderDetail" type="com.demo.entity.OrderDetailEntity">
+        <id property="id" column="detailId"/>
+        <result property="foodId" column="food_id"/>
+        <result property="orderId" column="orderId"/>
+        <result property="disabled" column="disabled"/>
+        <result property="buyNum" column="buyNum"/>
+
+
+        <result property="discount" column="discount"/>
+        <association property="food" resultMap="Food"/>
+    </resultMap>
+
+    <resultMap id="Food" type="com.demo.entity.FoodEntity">
+        <id column="foodIds" property="id"/>
+       <result column="food_Name" property="foodName"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+
+
+    <insert id="order">
+        INSERT INTO tb_order(order_code, table_id, total_Price, order_date)
+        VALUES (#{orderCode}, #{tableId}, #{totalPrice},NOW());
+        <selectKey keyProperty="id" resultType="integer" order="AFTER">
+            select LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+    <select id="findByTableId" resultType="com.demo.entity.OrderEntity">
+        SELECT *
+        FROM tb_order
+        WHERE disabled = 0
+          AND table_id = #{dinnerTableId}
+          AND order_Status = 0
+    </select>
+
+    <select id="findByOrderId" resultMap="orderDetail">
+        /*  detailId : 订单明细表的id 的别名 */
+        SELECT tb_order_detail.id detailId,tb_food.id foodIds, tb_order_detail.*, tb_food.*
+        FROM tb_order_detail
+                 LEFT JOIN tb_food ON tb_food.id = tb_order_detail.food_id
+        WHERE tb_order_detail.orderId = #{orderId}
+    </select>
+
+    <select id="findById" resultType="com.demo.entity.OrderEntity">
+        SELECT *
+        FROM tb_order
+        WHERE id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE tb_order
+        SET order_Status = #{orderStatus},
+            order_code   = #{orderCode},
+            table_id     = #{tableId},
+            total_Price  = #{totalPrice},
+            order_date   = #{orderDate},
+            disabled     = #{disabled}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateOrder">
+        UPDATE tb_order
+        SET disabled = #{disabled},
+        update_date = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="findAll" resultType="com.demo.entity.OrderEntity">
+        SELECT *
+        FROM tb_order
+        ORDER BY order_Date DESC
+    </select>
+</mapper>

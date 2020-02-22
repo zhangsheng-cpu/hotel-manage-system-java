@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.app.FoodDao">
+
+    <!--//根据菜系ID查询未删除的菜品-->
+    <select id="findByFoodTypeId" resultType="com.demo.entity.FoodEntity">
+        select *
+        from tb_food
+        where disabled = 0
+          and foodType_id = #{foodTypeId}
+    </select>
+
+    <!--查询表 tb_food-->
+    <select id="findById" resultType="com.demo.entity.FoodEntity">
+        select * from tb_food where id = #{foodId}
+    </select>
+</mapper>

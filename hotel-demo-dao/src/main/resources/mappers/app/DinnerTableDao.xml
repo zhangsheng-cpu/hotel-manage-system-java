@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.dao.app.DinnerTableDao">
+
+    <!--通过 餐桌名或餐桌状态 查询未被删除的餐桌-->
+    <select id="getAll" resultType="com.demo.entity.DinnerTableEntity">
+        select *
+        from tb_dinner_table
+        where disabled = 0
+        and table_status = #{param1}
+        <if test="param2 !=null ">and table_Name like "%"#{param2}"%"</if>
+    </select>
+    <!--查询 tb_dinner_table 表-->
+    <select id="findById" resultType="com.demo.entity.DinnerTableEntity">
+        select *
+        from tb_dinner_table
+        where id = #{id}
+    </select>
+
+
+    <!--修改 tb_dinner_table 表-->
+    <update id="update">
+        UPDATE tb_dinner_table
+        SET table_status   = #{tableStatus},
+            table_Name     = #{tableName},
+            begin_use_date = #{beginUseDate},
+            create_date    = #{createDate},
+            update_date    = #{updateDate},
+            disabled       = #{disabled}
+        WHERE id = #{id}
+    </update>
+
+</mapper>
